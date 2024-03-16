@@ -4,23 +4,47 @@ WORKDIR /app
 
 COPY . .
 
-ARG NPM_TOKEN
-ENV NPM_TOKEN ${NPM_TOKEN}
+ARG ENV
+ENV ENV ${ENV}
+
+ARG PORT
+ENV PORT ${PORT}
+
+
+ARG MONGO_PROTOCOL
+ENV MONGO_PROTOCOL ${MONGO_PROTOCOL}
+
+
+ARG MONGO_HOST
+ENV MONGO_HOST ${MONGO_HOST}
+
+
+ARG MONGO_PORT
+ENV MONGO_PORT ${MONGO_PORT}
+
+
+ARG MONGO_DBNAME
+ENV MONGO_DBNAME ${MONGO_DBNAME}
+
+
+ARG MONGO_APP_NAME
+ENV MONGO_APP_NAME ${MONGO_APP_NAME}
+
+
+ARG MONGO_USERNAME
+ENV MONGO_USERNAME ${MONGO_USERNAME}
+
+
+ARG MONGO_PASSWORD
+ENV MONGO_PASSWORD ${MONGO_PASSWORD}
+
+
 
 RUN npm install --frozen-lockfile
 
 RUN npm build
 
-FROM node:18.18.0
-
-WORKDIR /app
 RUN groupadd -r tillnonroot && useradd -r -g tillnonroot tillnonroot
-
-ARG NPM_TOKEN
-ENV NPM_TOKEN ${NPM_TOKEN}
-
-ARG ENV
-ENV ENV ${ENV}
 
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules

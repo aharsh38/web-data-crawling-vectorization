@@ -9,18 +9,24 @@ export class WebService {
     private readonly vectorEmbeddingsService: VectorEmbeddingsService,
   ) {}
 
-  async scrapAndEmbed(websiteUrl: string): Promise<string[]> {
+  async scrapAndEmbed(websiteUrl: string): Promise<any> {
     const tokens = await this.webScrapperService.scrap(websiteUrl);
+
     await this.vectorEmbeddingsService.createVectorEmbeddings(
       websiteUrl,
       tokens,
     );
     return tokens;
+
+    // const res = await this.vectorEmbeddingsService.generateVectorEmbeddings(
+    //   websiteUrl,
+    //   tokens,
+    // );
+    // return res;
   }
 
-  async fetchResult(query: string): Promise<string[]> {
-    const results = await this.vectorEmbeddingsService.search(query);
-    console.log(results);
+  async fetchResult(query: string, count: number): Promise<string[]> {
+    const results = await this.vectorEmbeddingsService.search(query, count);
     return results;
   }
 }
