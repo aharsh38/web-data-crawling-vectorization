@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema()
-export class WebScrapEmbeddings {
+export class WebScrapEmbeddings extends Document {
   @Prop()
   websiteUrl: string;
 

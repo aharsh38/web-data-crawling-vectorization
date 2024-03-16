@@ -11,21 +11,23 @@ export class WebService {
 
   async scrapAndEmbed(websiteUrl: string): Promise<any> {
     const tokens = await this.webScrapperService.scrap(websiteUrl);
+    console.log(tokens.length);
 
     await this.vectorEmbeddingsService.createVectorEmbeddings(
       websiteUrl,
       tokens,
     );
-    return tokens;
-
-    // const res = await this.vectorEmbeddingsService.generateVectorEmbeddings(
-    //   websiteUrl,
-    //   tokens,
-    // );
-    // return res;
+    return {
+      message: 'Processing completed',
+      websiteUrl,
+      tokens,
+    };
   }
 
-  async fetchResult(query: string, count: number): Promise<string[]> {
+  async fetchResult(
+    query: string,
+    count: number,
+  ): Promise<Record<string, unknown>[]> {
     const results = await this.vectorEmbeddingsService.search(query, count);
     return results;
   }

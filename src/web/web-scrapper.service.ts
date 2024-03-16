@@ -78,7 +78,8 @@ export class WebScrapperService {
       ...new Set(
         input
           .split(' ')
-          .filter((ele) => ele !== '' || !stopwords.includes(ele)),
+          .filter((ele) => ele !== '')
+          .filter((ele) => !stopwords.includes(ele)),
       ),
     ];
   }
