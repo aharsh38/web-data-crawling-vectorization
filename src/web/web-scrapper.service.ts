@@ -1,12 +1,9 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
 @Injectable()
 export class WebScrapperService {
-  constructor(private readonly httpService: HttpService) {}
-
   async scrap(url: string): Promise<string[]> {
     const dom = await this.fetchDOM(url);
     const cleanedText = this.cleanDOM(dom);
