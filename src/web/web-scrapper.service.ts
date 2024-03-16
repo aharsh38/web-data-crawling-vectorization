@@ -15,7 +15,15 @@ export class WebScrapperService {
 
   private async fetchDOM(url: string): Promise<string> {
     try {
-      const browser = await puppeteer.launch({ ignoreHTTPSErrors: true });
+      const browser = await puppeteer.launch({
+        ignoreHTTPSErrors: true,
+        args: [
+          `--no-sandbox`,
+          `--headless`,
+          `--disable-gpu`,
+          `--disable-dev-shm-usage`,
+        ],
+      });
       const page = await browser.newPage();
 
       const ua =

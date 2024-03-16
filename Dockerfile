@@ -1,4 +1,17 @@
-FROM node:20.10.0 as builder
+FROM --platform=linux/x86_64 ubuntu:20.04
+
+FROM node:20.10.0
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
+# Install Google Chrome Stable and fonts
+# Note: this installs the necessary libs to make the browser work with Puppeteer.
+RUN apt-get update && apt-get install gnupg wget -y && \
+    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install google-chrome-stable -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -38,17 +51,18 @@ ENV MONGO_USERNAME ${MONGO_USERNAME}
 ARG MONGO_PASSWORD
 ENV MONGO_PASSWORD ${MONGO_PASSWORD}
 
+ARG COHERE_API_KEY
+ENV COHERE_API_KEY ${MONGO_PASSWORD}
 
+ARG OPENAI_API_KEY
+ENV OPENAI_API_KEY ${OPENAI_API_KEY}
 
 RUN npm install --frozen-lockfile
 
-RUN npm build
+WORKDIR /app
+RUN node node_modules/puppeteer/install.mjs
 
-RUN groupadd -r tillnonroot && useradd -r -g tillnonroot tillnonroot
-
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+RUN npm run build
 
 EXPOSE 3000
 
@@ -58,4 +72,4 @@ RUN chmod +x /tini
 
 ENTRYPOINT ["/tini", "--"]
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:prod"]
