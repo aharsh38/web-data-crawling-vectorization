@@ -11,7 +11,7 @@ export class WebService {
     private readonly vectorEmbeddingsService: VectorEmbeddingsService,
   ) {}
 
-  async scrapAndEmbed(websiteUrl: string): Promise<any> {
+  async scrapAndEmbed(websiteUrl: string): Promise<string[]> {
     this.logger.debug(`Request for Scrapping and embedding for ${websiteUrl}`);
 
     const tokens = await this.webScrapperService.scrap(websiteUrl);
@@ -21,11 +21,7 @@ export class WebService {
       tokens,
     );
 
-    return {
-      message: 'Processing completed',
-      websiteUrl,
-      tokens,
-    };
+    return tokens;
   }
 
   async fetchResult(

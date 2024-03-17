@@ -10,12 +10,22 @@ export class WebController {
   @Version('1')
   @Post('/scrapAndEmbed')
   async scrapAndEmbed(@Body() body: ScrapAnsEmbedRequestDto) {
-    return await this.webService.scrapAndEmbed(body.websiteUrl);
+    const tokens = await this.webService.scrapAndEmbed(body.websiteUrl);
+
+    return {
+      message: 'Processing completed',
+      websiteUrl: body.websiteUrl,
+      tokens,
+    };
   }
 
   @Version('1')
   @Get()
   async fetchResult(@Query() data: QueryRequestDto) {
-    return await this.webService.fetchResult(data.query, data.count);
+    const results = await this.webService.fetchResult(data.query, data.count);
+    return {
+      message: 'Query Processing Completed',
+      results,
+    };
   }
 }
