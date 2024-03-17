@@ -81,14 +81,17 @@ You need to create an MongoDB Atlas cluster as a vector DB.
 After configuring your cluster, you'll need to create an index on the collection field you want to search over. Switch to the `Atlas Search` tab and click `Create Search Index`. From there, make sure you select `Atlas Vector Search - JSON Editor`, then select the appropriate database and collection and paste the following into the textbox:
 ```javascript
 {
-  "fields": [
-    {
-      "numDimensions": 1024,
-      "path": "embedding",
-      "similarity": "dotProduct",
-      "type": "vector"
+  "mappings": {
+    "fields": {
+      "embedding": [
+        {
+          "dimensions": 1024,
+          "similarity": "dotProduct",
+          "type": "knnVector"
+        }
+      ]
     }
-  ]
+  }
 }
 ```
 - Whitlist your IP on which the project is going to run in Atlas 
