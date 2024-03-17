@@ -2,9 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { stopwords } from './constants';
+import { LogService } from '../common/logger/logger.service';
 
 @Injectable()
 export class WebScrapperService {
+  constructor(private readonly logger: LogService) {}
+
   async scrap(url: string): Promise<string[]> {
     const dom = await this.fetchDOM(url);
     const cleanedText = this.cleanDOM(dom);
@@ -36,6 +39,8 @@ export class WebScrapperService {
       await browser.close();
       return dom;
     } catch (err) {
+      this.logger.error(err);
+
       throw new HttpException(
         {
           message: `Error while scraping dom: ${err.message}`,
@@ -58,6 +63,8 @@ export class WebScrapperService {
 
       return text;
     } catch (err) {
+      this.logger.error(err);
+
       throw new HttpException(
         {
           message: `Error while cleaning dom: ${err.message}`,

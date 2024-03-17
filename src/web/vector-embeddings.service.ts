@@ -3,13 +3,14 @@ import { MongoDBAtlasVectorSearch } from '@langchain/mongodb';
 import { CohereEmbeddings } from '@langchain/cohere';
 import { MongoClient, Collection } from 'mongodb';
 import { WebScrapEmbeddings } from '../schemas/web.schema';
+import { LogService } from '../common/logger/logger.service';
 
 @Injectable()
 export class VectorEmbeddingsService {
   private collection: Collection;
   private readonly mongoUri: string;
 
-  constructor() {
+  constructor(private readonly logger: LogService) {
     this.mongoUri = `${process.env.MONGO_PROTOCOL}://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}`;
     const client = new MongoClient(this.mongoUri);
     this.collection = client
@@ -35,6 +36,8 @@ export class VectorEmbeddingsService {
       );
       return;
     } catch (error) {
+      this.logger.error(error);
+
       throw new HttpException(
         {
           message: `Error while create Vector Embeddings: ${error.message}`,
@@ -69,6 +72,8 @@ export class VectorEmbeddingsService {
       });
       return response;
     } catch (error) {
+      this.logger.error(error);
+
       throw new HttpException(
         {
           message: `Error while query Vector Embeddings: ${error.message}`,

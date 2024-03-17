@@ -4,12 +4,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WebModule } from './web/web.module';
+import { LoggerModule } from './common/logger/logger.module';
+import { RequestLoggerInterceptor } from './common/interceptors/request-logger.interceptor';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    LoggerModule,
     WebModule,
     MongooseModule.forRoot(
       `${process.env.MONGO_PROTOCOL}://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}`,
@@ -21,6 +24,6 @@ import { WebModule } from './web/web.module';
     ),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RequestLoggerInterceptor],
 })
 export class AppModule {}
