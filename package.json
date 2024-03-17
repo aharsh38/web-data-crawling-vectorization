@@ -34,7 +34,6 @@
     "helmet": "^7.1.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.1",
-    "nest-winston": "^1.9.4",
     "puppeteer": "^22.4.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
