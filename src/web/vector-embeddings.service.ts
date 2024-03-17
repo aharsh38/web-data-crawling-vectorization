@@ -20,9 +20,9 @@ export class VectorEmbeddingsService {
   async createVectorEmbeddings(
     websiteUrl: string,
     tokens: string[],
-  ): Promise<unknown> {
+  ): Promise<void> {
     try {
-      const vectorStore = await MongoDBAtlasVectorSearch.fromTexts(
+      await MongoDBAtlasVectorSearch.fromTexts(
         tokens,
         new Array(tokens.length).fill(null).map(() => ({ websiteUrl })),
         new CohereEmbeddings(),
@@ -33,7 +33,7 @@ export class VectorEmbeddingsService {
           embeddingKey: process.env.MONGO_SEARCH_ENBEDDING_KEY,
         },
       );
-      return vectorStore.toJSON();
+      return;
     } catch (error) {
       throw new HttpException(
         {
